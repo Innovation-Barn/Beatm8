@@ -1,9 +1,9 @@
 name: Refresh Artist Metrics (All Platforms)
 
 on:
-  workflow_dispatch:    # Manual trigger from GitHub UI
+  workflow_dispatch:
   schedule:
-    - cron: '0 2 * * *' # Runs daily at 02:00 UTC — adjust if needed
+    - cron: '0 2 * * *'
 
 jobs:
   refresh:
@@ -14,8 +14,6 @@ jobs:
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
       SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
       SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
-      MIXCLOUD_CLIENT_ID: ${{ secrets.MIXCLOUD_CLIENT_ID }}
-      MIXCLOUD_CLIENT_SECRET: ${{ secrets.MIXCLOUD_CLIENT_SECRET }}
 
     steps:
       - name: Checkout repo
@@ -26,11 +24,13 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
+      - name: Install backend dependencies
         run: npm ci
+        working-directory: backend
 
-      - name: Refresh Spotify Metadata
-        run: node backend/scrapers/refreshSpotifyMetadata.js
+      - name: Run Spotify Refresh
+        run: node scrapers/refreshSpotifyMetadata.js
+        working-directory: backend
 
       # Placeholder for Mixcloud refresh (future)
       - name: Refresh Mixcloud Metadata
