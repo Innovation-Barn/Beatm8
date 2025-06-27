@@ -1,0 +1,26 @@
+{
+  "name": "beatm8-backend",
+  "version": "1.0.0",
+  "description": "Backend automation scripts for Beatm8 (Spotify, Mixcloud, Supabase ETL)",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "refresh-spotify": "node backend/scrapers/refreshSpotifyMetadata.js",
+    "sync-artists": "node backend/pipelines/syncEDMArtists.js"
+  },
+  "keywords": [
+    "beatm8",
+    "backend",
+    "supabase",
+    "spotify",
+    "mixcloud"
+  ],
+  "author": "Nuno Soares Carneiro",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.7",
+    "axios": "^1.6.7",
+    "dotenv": "^16.3.1",
+    "node-fetch": "^3.4.1"
+  }
+}
