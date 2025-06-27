@@ -53,3 +53,6 @@ coverage/
 
 # Ignore local dump files
 *.sql
+
+# macOS system files
+.DS_Store
