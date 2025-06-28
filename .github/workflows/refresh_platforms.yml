@@ -32,10 +32,9 @@ jobs:
         run: node scrapers/refreshSpotifyMetadata.js
         working-directory: backend
 
-      # Placeholder for Mixcloud refresh (future)
-      - name: Refresh Mixcloud Metadata
-        run: |
-          echo "Mixcloud refresh not yet implemented."
+     - name: Run Mixcloud Refresh
+        run: node backend/scrapers/refreshMixcloudMetadata.js
+        working-directory: backend
 
       # Placeholder for SoundCloud refresh (future)
       - name: Refresh SoundCloud Metadata
