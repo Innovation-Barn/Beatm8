@@ -1,0 +1,29 @@
+name: Populate Mixcloud IDs
+
+on:
+  workflow_dispatch:  # Manual trigger from GitHub UI
+
+jobs:
+  populate:
+    runs-on: ubuntu-latest
+
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install backend dependencies
+        run: npm ci
+        working-directory: backend
+
+      - name: Run Mixcloud ID population
+        run: node pipelines/populateMixcloudIds.js
+        working-directory: backend
