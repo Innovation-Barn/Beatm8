@@ -1,9 +1,9 @@
-name: Refresh Artist Metrics (All Platforms)
+name: Refresh Artist Metadata (All Platforms)
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:   # Manual trigger from GitHub UI
   schedule:
-    - cron: '0 2 * * *'
+    - cron: '0 2 * * *'  # Runs daily at 02:00 UTC
 
 jobs:
   refresh:
@@ -16,7 +16,7 @@ jobs:
       SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Set up Node.js
@@ -28,15 +28,20 @@ jobs:
         run: npm ci
         working-directory: backend
 
-      - name: Run Spotify Refresh
+      - name: Refresh Spotify Metadata
         run: node scrapers/refreshSpotifyMetadata.js
         working-directory: backend
 
-     - name: Run Mixcloud Refresh
-        run: node backend/scrapers/refreshMixcloudMetadata.js
+      - name: Refresh Mixcloud Metadata
+        run: node scrapers/refreshMixcloudMetadata.js
         working-directory: backend
 
-      # Placeholder for SoundCloud refresh (future)
+      # Placeholder for SoundCloud (future)
       - name: Refresh SoundCloud Metadata
-        run: |
-          echo "SoundCloud refresh not yet implemented."
+        run: echo "SoundCloud refresh not yet implemented."
+        working-directory: backend
+
+      # Placeholder for Apple Music (future)
+      - name: Refresh Apple Music Metadata
+        run: echo "Apple Music refresh not yet implemented."
+        working-directory: backend
