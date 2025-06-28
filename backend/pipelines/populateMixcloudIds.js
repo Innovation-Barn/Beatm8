@@ -1,9 +1,9 @@
 /**
  * populateMixcloudIds.js
  *
- * Looks up Mixcloud usernames for each artist in Supabase.
+ * Searches Mixcloud for each artist_name where mixcloud_id IS NULL.
  * Updates mixcloud_id in artists if a clear match is found.
- * Logs duplicates and unresolved entries.
+ * Handles duplicates and unresolved cases with JSON outputs for manual review.
  */
 
 import dotenv from 'dotenv';
@@ -29,13 +29,14 @@ const BATCH_DELAY_MS = 500;
 (async () => {
   console.log('🚀 Starting Mixcloud ID population...');
 
-  // Fetch artist names from Supabase
+  // ✅ Only fetch artists where mixcloud_id IS NULL
   const { data: artists, error } = await supabase
     .from('artists')
-    .select('beatm8_uuid, artist_name, mixcloud_id');
+    .select('beatm8_uuid, artist_name, mixcloud_id')
+    .is('mixcloud_id', null);
 
   if (error) throw error;
-  console.log(`🎯 Fetched ${artists.length} artists from Supabase.`);
+  console.log(`🎯 Found ${artists.length} artists with NULL mixcloud_id.`);
 
   const unresolved = [];
   const duplicates = [];
@@ -55,7 +56,7 @@ const BATCH_DELAY_MS = 500;
       continue;
     }
 
-    // Filter for users who have uploaded cloudcasts
+    // ✅ Filter for users with at least one cloudcast (i.e., real artists)
     const validResults = results.filter((r) => r.cloudcast_count > 0);
 
     if (validResults.length === 0) {
@@ -89,7 +90,7 @@ const BATCH_DELAY_MS = 500;
     }
   }
 
-  // Write unresolved and duplicates to JSON for review
+  // ✅ Write unresolved and duplicates to JSON for review
   fs.writeFileSync('./mixcloud_unresolved.json', JSON.stringify(unresolved, null, 2));
   fs.writeFileSync('./mixcloud_duplicates.json', JSON.stringify(duplicates, null, 2));
 
